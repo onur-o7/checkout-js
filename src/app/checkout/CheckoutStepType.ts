@@ -3,6 +3,7 @@ enum CheckoutStepType {
     Customer = 'customer',
     Payment = 'payment',
     Shipping = 'shipping',
+    EndUser = 'end_user',
 }
 
 export default CheckoutStepType;

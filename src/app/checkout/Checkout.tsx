@@ -1,8 +1,20 @@
-import { Address, Cart, CartChangedError, CheckoutParams, CheckoutSelectors, Consignment, EmbeddedCheckoutMessenger, EmbeddedCheckoutMessengerOptions, FlashMessage, Promotion, RequestOptions, StepTracker } from '@bigcommerce/checkout-sdk';
+import { Address,
+    Cart,
+    CartChangedError,
+    CheckoutParams,
+    CheckoutSelectors,
+    Consignment,
+    EmbeddedCheckoutMessenger,
+    EmbeddedCheckoutMessengerOptions,
+    FlashMessage,
+    Promotion,
+    RequestOptions,
+    StepTracker } from '@bigcommerce/checkout-sdk';
 import classNames from 'classnames';
 import { find, findIndex } from 'lodash';
 import React, { lazy, Component, ReactNode } from 'react';
 
+import EndUserInfoStep from '../../@opt7/EndUserInfoStep';
 import { StaticBillingAddress } from '../billing';
 import { EmptyCartMessage } from '../cart';
 import { isCustomError, CustomError, ErrorLogger, ErrorModal } from '../common/error';
@@ -263,6 +275,9 @@ class Checkout extends Component<CheckoutProps & WithCheckoutProps & WithLanguag
         case CheckoutStepType.Shipping:
             return this.renderShippingStep(step);
 
+        case CheckoutStepType.EndUser:
+            return  this.renderEndUserStep(step);
+
         case CheckoutStepType.Billing:
             return this.renderBillingStep(step);
 
@@ -362,6 +377,31 @@ class Checkout extends Component<CheckoutProps & WithCheckoutProps & WithLanguag
                 </LazyContainer>
             </CheckoutStep>
         );
+    }
+
+    private renderEndUserStep(step: CheckoutStepStatus): ReactNode {
+       // TODO: Header Traslation
+
+        return(
+        <CheckoutStep
+            { ...step }
+            heading="End User Info"
+            key={ step.type }
+            onEdit={ this.handleEditStep }
+            onExpanded={ this.handleExpanded }
+            suggestion={ <CheckoutSuggestion /> }
+            summary={
+                <CustomerInfo
+                    onSignOut={ this.handleSignOut }
+                    onSignOutError={ this.handleError }
+                />
+            }
+        >
+            <LazyContainer>
+                <EndUserInfoStep title={ 'Onur' } />
+            </LazyContainer>
+        </CheckoutStep>
+    );
     }
 
     private renderBillingStep(step: CheckoutStepStatus): ReactNode {

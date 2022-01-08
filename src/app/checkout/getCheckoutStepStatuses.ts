@@ -25,6 +25,7 @@ const getCustomerStepStatus = createSelector(
             isComplete,
             isEditable: isComplete && !isUsingWallet && isGuest,
             isRequired: true,
+            hidden: false,
         };
     }
 );
@@ -54,6 +55,7 @@ const getBillingStepStatus = createSelector(
                 isComplete: isAmazonPayBillingStepComplete,
                 isEditable: isAmazonPayBillingStepComplete && hasCustomFields,
                 isRequired: true,
+                hidden: false,
             };
         }
 
@@ -63,6 +65,7 @@ const getBillingStepStatus = createSelector(
             isComplete,
             isEditable: isComplete && !isUsingWallet,
             isRequired: true,
+            hidden: false,
         };
     }
 );
@@ -93,6 +96,7 @@ const getShippingStepStatus = createSelector(
             isComplete,
             isEditable: isComplete && isRequired,
             isRequired,
+            hidden: false,
         };
     }
 );
@@ -108,6 +112,23 @@ const getPaymentStepStatus = createSelector(
             isComplete,
             isEditable: isComplete,
             isRequired: true,
+            hidden: false,
+        };
+    }
+);
+
+const getEndUserStepStatus = createSelector(
+    ({ data }: CheckoutSelectors) => data.getOrder(),
+    order => {
+        const isComplete = order ? order.isComplete : false;
+
+        return {
+            type: CheckoutStepType.EndUser,
+            isActive: false,
+            isComplete,
+            isEditable: isComplete,
+            isRequired: true,
+            hidden: false,
         };
     }
 );
@@ -115,19 +136,28 @@ const getPaymentStepStatus = createSelector(
 const getCheckoutStepStatuses = createSelector(
     getCustomerStepStatus,
     getShippingStepStatus,
+    getEndUserStepStatus,
     getBillingStepStatus,
     getPaymentStepStatus,
-    (customerStep, shippingStep, billingStep, paymentStep) => {
+    (
+        customerStep,
+        shippingStep,
+        endUserStep,
+        billingStep,
+        paymentStep) => {
         const steps = compact([
             customerStep,
             shippingStep,
+            endUserStep,
             billingStep,
             paymentStep,
         ]);
 
         const defaultActiveStep = steps.find(step => !step.isComplete && step.isRequired) || steps[steps.length - 1];
 
-        return steps.map((step, index) => {
+        return steps
+            .filter(step => !step.hidden)
+            .map((step, index) => {
             const isPrevStepComplete = steps.slice(0, index).every(prevStep => prevStep.isComplete || !prevStep.isRequired);
 
             return {

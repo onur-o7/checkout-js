@@ -6,4 +6,5 @@ export default interface CheckoutStepStatus {
     isEditable: boolean;
     isRequired: boolean;
     type: CheckoutStepType;
+    hidden?: boolean;
 }
