@@ -4,7 +4,8 @@
         "plugin:import/typescript",
         "plugin:import/warnings",
         "plugin:react/recommended",
-        "@bigcommerce/eslint-config"
+        "@bigcommerce/eslint-config",
+        "plugin:prettier/recommended"
     ],
     "env": {
         "browser": true
@@ -20,9 +21,7 @@
         "sourceType": "module",
         "useJSXTextNode": true
     },
-    "plugins": [
-        "@typescript-eslint/tslint"
-    ],
+    "plugins": ["@typescript-eslint/tslint"],
     "rules": {
         "@typescript-eslint/tslint/config": [
             "error",
@@ -52,7 +51,8 @@
                     "**/order/OrderSummary.tsx",
                     "**/order/OrderSummaryDrawer.tsx",
                     "**/payment/Payment.tsx",
-                    "**/shipping/Shipping.tsx"
+                    "**/shipping/Shipping.tsx",
+                    "src/@opt7/*"
                 ]
             }
         ],

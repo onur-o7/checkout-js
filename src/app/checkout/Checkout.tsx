@@ -14,7 +14,7 @@ import classNames from 'classnames';
 import { find, findIndex } from 'lodash';
 import React, { lazy, Component, ReactNode } from 'react';
 
-import EndUserInfoStep from '../../@opt7/EndUserInfoStep';
+import EndUserInfoStep from '../@opt7/EndUserInfoStep';
 import { StaticBillingAddress } from '../billing';
 import { EmptyCartMessage } from '../cart';
 import { isCustomError, CustomError, ErrorLogger, ErrorModal } from '../common/error';

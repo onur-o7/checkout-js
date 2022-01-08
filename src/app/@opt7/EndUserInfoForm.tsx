@@ -1,14 +1,12 @@
 import { SignInEmail } from '@bigcommerce/checkout-sdk';
-import { withFormik, FormikProps } from 'formik';
+import { withFormik, FieldProps, FormikProps } from 'formik';
 import { noop } from 'lodash';
-import React, { memo, FC } from 'react';
+import React, { memo, useCallback, FC } from 'react';
 
-// eslint-disable-next-line import/no-internal-modules
-import getEmailValidationSchema from '../app/customer/getEmailValidationSchema';
-// eslint-disable-next-line import/no-internal-modules
-import EmailField from '../app/customer/EmailField';
-import { withLanguage, WithLanguageProps } from '../app/locale';
-import { Form } from '../app/ui/form';
+import { Fieldset, Form, FormField, TextInput } from '../ui/form';
+
+import './EndUserInfo.scss';
+import EmailField from '../customer/EmailField';
 
 export interface EndUserFormProps {
     email?: string;
@@ -26,22 +24,30 @@ export interface EndUserFormValues {
 }
 
 const EndUserInfoForm: FC<FormikProps<EndUserFormProps>> = () => {
+    const renderInput = useCallback(
+        ({ field }: FieldProps) => <TextInput {...field} autoComplete={'off'} maxLength={2000} />,
+        []
+    );
+
     return (
         <Form>
-            <EmailField />
+            <Fieldset additionalClassName="endUser-info-form">
+                <EmailField />
+
+                <FormField input={renderInput} label={'First Name'} name={'first_name'} />
+
+                <FormField input={renderInput} label={'Last Name'} name={'last_name'} />
+            </Fieldset>
         </Form>
-        );
+    );
 };
 
-export default withFormik<EndUserFormProps , EndUserFormValues>({
-    mapPropsToValues: ({
-                           email = '',
-                            isOpen= true,
-                       }) => ({
+export default withFormik<EndUserFormProps, EndUserFormValues>({
+    mapPropsToValues: ({ email = '', isOpen = true }) => ({
         email,
-        isOpen,
+        isOpen
     }),
     handleSubmit: (values, { props: { onSendLoginEmail = noop } }) => {
         onSendLoginEmail(values);
-    },
-})(memo(EndUserInfoForm));)
+    }
+})(memo(EndUserInfoForm));
